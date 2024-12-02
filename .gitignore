@@ -1,43 +1,19 @@
-# Ignore Python bytecode and cache directories
+# Byte-compiled / optimized / DLL files
 *.pyc
 __pycache__/
 
-# Ignore development logs
+# Logs and temporary files
 *.log
-devlog.md.bak
-
-# Ignore compiled binary files
-*.exe
-*.out
-
-# Ignore test files and temporary files
 *.tmp
 *.bak
-*.swp
-*.swo
 
-# Ignore IDE-specific files (VS Code, IntelliJ, etc.)
+# IDE and editor settings
 .vscode/
-.idea/
-*.iml
+*.swp
 
-# Ignore zip files for submission
-*.zip
-
-# Ignore system files
+# OS-specific files
 .DS_Store
 Thumbs.db
 
-# Ignore files created during builds (if using C/C++)
-*.o
-*.obj
-*.so
-*.dll
-*.dylib
-
-# Git and other versioning system files (optional)
-.git/
-
-# Ignore repository-specific settings (optional)
-*.env
-
+# Submission files
+*.zip
