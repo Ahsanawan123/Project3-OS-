@@ -17,3 +17,6 @@ Thumbs.db
 
 # Submission files
 *.zip
+
+# Files to ignore when pushing and pulling
+test_file.txt
