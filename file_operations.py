@@ -1,42 +1,50 @@
 import os
+from struct import pack
 
 def create_file(filename):
-    """Creates a new file or overwrites an existing one after confirmation."""
+    """Creates a new index file with a valid B-Tree header."""
     if os.path.exists(filename):
-        overwrite = input(f"File {filename} exists. Overwrite? (yes/no): ").strip().lower()
+        overwrite = input(f"File {filename} already exists. Overwrite? (yes/no): ").strip().lower()
         if overwrite != 'yes':
             print("Operation aborted.")
             return
     try:
-        with open(filename, 'w') as f:
-            f.write("")  # Create an empty file
+        # B-Tree file header initialization
+        magic_number = b"4337PRJ3"  # Identifier for the B-Tree file
+        root_block_id = 0
+        next_block_id = 1
+        header_format = "8sQQ"
+        block_size = 512
+
+        with open(filename, 'wb') as f:
+            # Write a valid B-Tree header
+            header = pack(header_format, magic_number, root_block_id, next_block_id)
+            f.write(header.ljust(block_size, b"\x00"))  # Pad the header to block size
         print(f"File '{filename}' created successfully.")
     except Exception as e:
         print(f"Error creating file: {e}")
 
-def save_file(filename, data):
-    """Saves data (a dictionary) to the specified file."""
-    try:
-        with open(filename, 'w') as f:
-            for key, value in data.items():
-                f.write(f"{key},{value}\n")  # Save as CSV-like format
-        print(f"Data saved to '{filename}'.")
-    except Exception as e:
-        print(f"Error saving file: {e}")
 
-def load_file(filename):
-    """Loads data from the specified file and returns it as a dictionary."""
+def save_file(filename, btree):
+    """Saves the entire B-Tree to the file."""
+    try:
+        btree.save_to_file()
+        print(f"B-Tree saved to '{filename}' successfully.")
+    except Exception as e:
+        print(f"Error saving B-Tree to file: {e}")
+
+
+def load_file(filename, t=10):
+    """Loads a B-Tree from a file."""
     if not os.path.exists(filename):
-        print(f"File '{filename}' does not exist.")
+        print(f"Error: File '{filename}' does not exist.")
         return None
     try:
-        data = {}
-        with open(filename, 'r') as f:
-            for line in f:
-                key, value = line.strip().split(',')
-                data[key] = value
-        print(f"Data loaded from '{filename}': {data}")
-        return data
+        from btree import BTree
+        btree = BTree(t, filename)
+        btree.load_from_file()
+        print(f"B-Tree loaded from '{filename}' successfully.")
+        return btree
     except Exception as e:
-        print(f"Error loading file: {e}")
+        print(f"Error loading B-Tree from file: {e}")
         return None
